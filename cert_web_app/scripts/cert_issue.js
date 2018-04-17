@@ -9,6 +9,8 @@ function issue_cert(event)
     
     var account = g_web3.eth.accounts.create();
     console.log(account);
-
+    g_web3.eth.getAccounts(console.log)
+    console.log("Creating hash of hello world");
+    console.log(g_web3.utils.sha3('Hello World'));
     console.log("issue_cert--");
 }

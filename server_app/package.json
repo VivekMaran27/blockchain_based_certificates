@@ -10,7 +10,10 @@
     "debug": "~2.6.9",
     "express": "~4.16.0",
     "express-handlebars": "^3.0.0",
+    "fs": "0.0.1-security",
+    "gimp": "0.0.1-security",
     "http-errors": "~1.6.2",
+    "jimp": "^0.2.28",
     "morgan": "~1.9.0"
   }
 }
