@@ -10,7 +10,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/cert_form/submit/:fname/:lname',function(req,res,next) {
-  console.log("Rendering "+cert_image);
+  console.log("Rendering");
   res.render('cert',{cert_image: cert_image});
 }
 );
