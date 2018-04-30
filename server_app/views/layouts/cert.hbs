@@ -1,4 +1,121 @@
-<img src="data:image/jpeg;base64, {{cert_image}}" alt="Red dot"/>
-<p> <b>Contract Address:</b> {{contract_address}}</p>
-<p> <b>Student public key:</b> {{stud_pub_key}}</p>
-<button id="button">Verify certificate</button>
+<img id = "cert_img" src="data:image/jpeg;base64, {{cert_image}}" alt="Red dot" />
+<button id="verify" type="button" class ="button" onclick="verify()">Verify Certificate</button>
+<div id="result">
+</div>
+<button id = "print" type="button" class ="button"  onclick="print()">Print</button>
+
+<script type="text/javascript" src="/server_app/public/scripts/web3.min.js"></script> 
+<script>
+   
+    if (typeof web3 !== 'undefined') {
+  web3 = new Web3(web3.currentProvider);
+} else {
+  // set the provider you want from Web3.providers
+  web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+}
+document.getElementById("verify").onclick = function() {verify()};
+document.getElementById("print").onclick = function() {print()};
+
+function verify() 
+{
+   var base64 = getBase64Image(document.getElementById("cert_img"));
+   var hash = web3.sha3(base64);
+   var abi=[
+     {
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_address",
+				"type": "address"
+			},
+			{
+				"name": "_certHash",
+				"type": "string"
+			}
+		],
+		"name": "issueCertificate",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "student",
+				"type": "address"
+			}
+		],
+		"name": "getCerificate",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_address",
+				"type": "address"
+			},
+			{
+				"name": "_certHash",
+				"type": "string"
+			}
+		],
+		"name": "verifyCertificate",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	}];
+    console.log(hash);
+   document.getElementById("result").innerHTML = "Hash :"+hash;
+   var ver = web3.version.api;
+   console.log(ver);
+   var addres=new web3.eth.Contract(abi);
+   var myContract = addres.at(0x794BE4d9eAA1b865Ad8223E6f2AE928F06b60213);
+myContract.methods.verifyCertificate(0x561da499e78486727bFEeC2992C121C16724575f,hash).call({from:'0x794BE4d9eAA1b865Ad8223E6f2AE928F06b60213'}, function(error, result)
+{
+  console.log("check 1");
+    if(!error){
+                    console.log(result);
+                } else{
+                    console.log(error);
+                }
+});
+}
+    
+function getBase64Image(img)
+{
+  var canvas = document.createElement("canvas");
+  canvas.width = img.width;
+  canvas.height = img.height;
+  var ctx = canvas.getContext("2d");
+  ctx.drawImage(img, 0, 0);
+  var dataURL = canvas.toDataURL("image/png");
+  return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+}
+function print() 
+{
+    
+}
+</script>

@@ -4,7 +4,13 @@ Interacting-with-a-Smart-Contract-through-Web3.js-(Tutorial) */
 body {
     background-color:#F0F0F0;
     padding: 2em;
-    font-family: 'Raleway','Source Sans Pro', 'Arial';
+    /**font-family: 'Raleway','Source Sans Pro', 'Arial'; **/
+    font-family: "Lucida Sans Unicode";
+	font-size: 18px;
+	font-style: italic;
+	font-variant: normal;
+	font-weight: 700;
+	line-height: 33px;
 }
 .container {
     width: 50%;
@@ -13,11 +19,20 @@ body {
 label {
     display:block;
     margin-bottom:10px;
+    font-style: italic;
+	font-variant: normal;
+    
 }
 input {
     padding:10px;
     width: 50%;
     margin-bottom: 1em;
+    font-family: "Lucida Sans Unicode";
+	font-size: 15px;
+	font-style: italic;
+	font-variant: normal;
+	font-weight: 100;
+	line-height: 22px;
 }
 button {
     margin: 2em 0;
