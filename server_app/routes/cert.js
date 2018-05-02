@@ -127,15 +127,10 @@ var generate = function(fName, lName, course, stream, date, stud_pub_key) {
             return Jimp.loadFont(Jimp.FONT_SANS_16_BLACK); 
         })
         .then(function (font) {
-            /* Write text to the image, and then write that to a file */
-            console.log("Loaded font");
-            //try { fs.unlinkSync(tempCertFile); console.log("Deleted old cert");}
-            //catch(err) {console.log(err);}
-            console.log(loadedImage);
-            loadedImage.print(font, 10, 10, imageCaption).write(tempCertFile);
-            console.log("Contents overlayed");
-            //sleep(2);
-            return  geFiletData(tempCertFile);
+            loadedImage.print(font, 350, 220, fName + ' ' + lName)
+                        .print(font, 280, 320, course + ' in ' + stream)
+                        .write(tempCertFile);
+            return geFiletData(tempCertFile);
         })
         .then(function(data){
             CertBase64String = Buffer.from(data).toString('base64');
