@@ -106,17 +106,10 @@ const contract = new web3.eth.Contract(abi, contractAddress, {
 
 function geFiletData(fileName) {
     return new Promise(function(resolve, reject){
-//      while(true)
-//      {
-//          var stats = fs.statSync(fileName);
-//          var fileSizeInBytes = stats.size;
-//          if(fileSizeInBytes != 0) { break;}
-//         console.log("Waiting for certificate update in FS "+ fileSizeInBytes);
-//      }      
-      fs.readFile(fileName, (err, data) => {
-          err ? reject(err) : resolve(data);
+        fs.readFile(fileName, (err, data) => {
+            err ? reject(err) : resolve(data);
+        });
       });
-    });
 }
 
 function sleep(seconds){
@@ -128,19 +121,21 @@ var generate = function(fName, lName, course, stream, date, stud_pub_key) {
     return new Promise(function(resolve, reject) {
         Jimp.read("Certificate_SJSU.jpg").then(function (image) {
             console.log("Template: "+certTemplateName+ " opened");
+            image.resize(794,617)
+            .quality(100)                 // set JPEG quality 
             loadedImage = image;
             return Jimp.loadFont(Jimp.FONT_SANS_16_BLACK); 
         })
         .then(function (font) {
             /* Write text to the image, and then write that to a file */
             console.log("Loaded font");
-            try { fs.unlinkSync(tempCertFile); console.log("Deleted old cert");}
-            catch(err) {console.log(err);}
+            //try { fs.unlinkSync(tempCertFile); console.log("Deleted old cert");}
+            //catch(err) {console.log(err);}
             console.log(loadedImage);
             loadedImage.print(font, 10, 10, imageCaption).write(tempCertFile);
             console.log("Contents overlayed");
-            sleep(2);
-            return geFiletData(tempCertFile);
+            //sleep(2);
+            return  geFiletData(tempCertFile);
         })
         .then(function(data){
             CertBase64String = Buffer.from(data).toString('base64');
