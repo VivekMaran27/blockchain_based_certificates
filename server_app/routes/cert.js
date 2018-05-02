@@ -196,7 +196,7 @@ function addCertToBlockChain(student_address, certhash)
                 const functionAbi = contractFunction.encodeABI();
                 const txParams = {
                     gasLimit: web3.utils.toHex(150000),
-                    gasPrice: web3.utils.toHex(1000000000),
+                    gasPrice: web3.utils.toHex(5000000000),
                     to: contractAddress,
                     data: functionAbi,
                     from: account,
