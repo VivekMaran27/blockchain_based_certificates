@@ -4,7 +4,7 @@
 </div>
 <button id = "print" type="button" class ="button"  onclick="print()">Print</button>
 
-<script type="text/javascript" src="/server_app/public/scripts/web3.min.js"></script> 
+<script type="text/javascript" src="master_v2/blockchain_based_cert/server_app/public/scripts/web3.min.js"></script> 
 <script>
    
     if (typeof web3 !== 'undefined') {
@@ -14,7 +14,7 @@
   web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
 }
 document.getElementById("verify").onclick = function() {verify()};
-document.getElementById("print").onclick = function() {print()};
+document.getElementById("print").onclick = function() {print()}; 
 
 function verify() 
 {
