@@ -1,6 +1,8 @@
-<img id = "cert_img" src="data:image/jpeg;base64, {{cert_image}}" alt="Red dot" />
-<p> <b>Contract Address:</b> <id = "contract_address">{{contract_address}}</id></p>
-<p> <b>Student public key:</b> <id = "stud_pub_key">{{stud_pub_key}}</id></p>
+<img id = "cert_img" src="data:image/jpeg;base64,{{cert_image}}" alt="Red Dot"/>
+<p> <b>Contract Address:</b><div id="stud_pub_key">{{stud_pub_key}}</div></p>
+<p> <b>Student public key:</b><div id="contract_address">{{contract_address}}</div></p>
+<!--input type="hidden" id="stud_pub_key" name="stud_pub_key" value={{contract_address}} />
+<input type="hidden" id="stud_pub_key" name="contract_address" value={{stud_pub_key}} /-->
 
 <button id="verify" type="button" class ="button" onclick="verify()">Verify Certificate</button>
 <div id="hash">
@@ -18,10 +20,20 @@ document.getElementById("print").onclick = function() {print()};
 
 function verify() 
 {
+   /* Get image */
+   var image_src =  document.getElementById("cert_img").src;
+   var image_strt_idx = image_src.indexOf(",");
+   var img = image_src.substring(image_strt_idx+1);
+   console.log("Image: " +img);
+   
    var base64 = getBase64Image(document.getElementById("cert_img"));
-   console.log("student_pub_key: "+document.getElementById("stud_pub_key"));
-   console.log("contract_address: "+document.getElementById("contract_address"));
-   var hash = web3.utils.sha3(base64);
+   var stud_pub_key_val = document.getElementById("stud_pub_key").innerHTML;
+   var contract_address_val = document.getElementById("contract_address").innerHTML;
+
+   //alert(test);
+   console.log("student_pub_key: "+stud_pub_key_val);
+   console.log("contract_address: "+contract_address_val);
+   var hash = web3.utils.sha3(img);
    var abi=[
      {
 		"constant": false,
@@ -91,8 +103,8 @@ function verify()
 	}];
     console.log(hash);
    document.getElementById("hash").innerHTML = "Hash :"+hash;
-   const myContract = new web3.eth.Contract(abi,document.getElementById("contract_address"));
-myContract.methods.verifyCertificate(document.getElementById("stud_pub_key"),hash).call({from:'0x794BE4d9eAA1b865Ad8223E6f2AE928F06b60213'}, function(error, result)
+   const myContract = new web3.eth.Contract(abi,contract_address_val);
+myContract.methods.verifyCertificate(stud_pub_key_val, hash).call({from:'0x794BE4d9eAA1b865Ad8223E6f2AE928F06b60213'}, function(error, result)
 {
        console.log("check 1");
         if(!error)
