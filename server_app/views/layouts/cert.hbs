@@ -1,33 +1,33 @@
 <img id = "cert_img" src="data:image/jpeg;base64, {{cert_image}}" alt="Red dot" />
-<p> <b>Contract Address:</b> {{contract_address}}</p>
-<p> <b>Student public key:</b> {{stud_pub_key}}</p>
+<p> <b>Contract Address:</b> <id = "contract_address">{{contract_address}}</id></p>
+<p> <b>Student public key:</b> <id = "stud_pub_key">{{stud_pub_key}}</id></p>
+
 <button id="verify" type="button" class ="button" onclick="verify()">Verify Certificate</button>
+<div id="hash">
+</div>
 <div id="result">
 </div>
 <button id = "print" type="button" class ="button"  onclick="print()">Print</button>
 
-<script type="text/javascript" src="master_v2/blockchain_based_cert/server_app/public/scripts/web3.min.js"></script> 
+<script type="text/javascript" src="/scripts/web3.min.js"></script> 
 <script>
    
-    if (typeof web3 !== 'undefined') {
-  web3 = new Web3(web3.currentProvider);
-} else {
-  // set the provider you want from Web3.providers
-  web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
-}
+web3 = new Web3(new Web3.providers.HttpProvider("https://ropsten.infura.io/U9yDj40b2Vl0wwJgnC9V"));
 document.getElementById("verify").onclick = function() {verify()};
 document.getElementById("print").onclick = function() {print()}; 
 
 function verify() 
 {
    var base64 = getBase64Image(document.getElementById("cert_img"));
-   var hash = web3.sha3(base64);
+   console.log("student_pub_key: "+document.getElementById("stud_pub_key"));
+   console.log("contract_address: "+document.getElementById("contract_address"));
+   var hash = web3.utils.sha3(base64);
    var abi=[
      {
 		"constant": false,
 		"inputs": [
 			{
-				"name": "_address",
+				"name": "_address", 
 				"type": "address"
 			},
 			{
@@ -90,19 +90,26 @@ function verify()
 		"type": "function"
 	}];
     console.log(hash);
-   document.getElementById("result").innerHTML = "Hash :"+hash;
-   var ver = web3.version.api;
-   console.log(ver);
-   var addres=new web3.eth.Contract(abi);
-   var myContract = addres.at(0x794BE4d9eAA1b865Ad8223E6f2AE928F06b60213);
-myContract.methods.verifyCertificate(0x561da499e78486727bFEeC2992C121C16724575f,hash).call({from:'0x794BE4d9eAA1b865Ad8223E6f2AE928F06b60213'}, function(error, result)
+   document.getElementById("hash").innerHTML = "Hash :"+hash;
+   const myContract = new web3.eth.Contract(abi,document.getElementById("contract_address"));
+myContract.methods.verifyCertificate(document.getElementById("stud_pub_key"),hash).call({from:'0x794BE4d9eAA1b865Ad8223E6f2AE928F06b60213'}, function(error, result)
 {
-  console.log("check 1");
-    if(!error){
-                    console.log(result);
-                } else{
-                    console.log(error);
-                }
+       console.log("check 1");
+        if(!error)
+        {
+        	console.log(result);
+            if(result)
+            {
+            	document.getElementById("result").innerHTML = "Result : Pass";
+            }
+            else
+			{
+				document.getElementById("result").innerHTML = "Result : Fail";
+			}
+		} 
+		else{
+			console.log(error);
+		}
 });
 }
     
