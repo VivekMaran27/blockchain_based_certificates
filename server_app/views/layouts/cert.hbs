@@ -5,11 +5,17 @@
 <input type="hidden" id="stud_pub_key" name="contract_address" value={{stud_pub_key}} /-->
 
 <button id="verify" type="button" class ="button" onclick="verify()">Verify Certificate</button>
+<div id="div1">
+</div>
 <div id="hash">
+</div>
+<div id="div2">
+</div>
+<div id="div3">
 </div>
 <div id="result">
 </div>
-<button id = "print" type="button" class ="button"  onclick="print()">Print</button>
+<!--button id = "print" type="button" class ="button"  onclick="print()">Print</button/-->
 
 <script type="text/javascript" src="/scripts/web3.min.js"></script> 
 <script>
@@ -20,21 +26,18 @@ document.getElementById("print").onclick = function() {print()};
 
 function verify() 
 {
-   /* Get image */
-   var image_src =  document.getElementById("cert_img").src;
-   var image_strt_idx = image_src.indexOf(",");
-   var img = image_src.substring(image_strt_idx+1);
-   console.log("Image: " +img);
-   
-   var base64 = getBase64Image(document.getElementById("cert_img"));
-   var stud_pub_key_val = document.getElementById("stud_pub_key").innerHTML;
+	document.getElementById("div1").innerHTML = "";
+	document.getElementById("div2").innerHTML = "";
+	document.getElementById("div3").innerHTML = "";
+	document.getElementById("result").innerHTML = "";
+	document.getElementById("hash").innerHTML = "";
+	var stud_pub_key_val = document.getElementById("stud_pub_key").innerHTML;
    var contract_address_val = document.getElementById("contract_address").innerHTML;
 
    //alert(test);
    console.log("student_pub_key: "+stud_pub_key_val);
    console.log("contract_address: "+contract_address_val);
-   var hash = web3.utils.sha3(img);
-   var abi=[
+	var abi=[
      {
 		"constant": false,
 		"inputs": [
@@ -101,12 +104,36 @@ function verify()
 		"stateMutability": "view",
 		"type": "function"
 	}];
-    console.log(hash);
-   document.getElementById("hash").innerHTML = "Hash :"+hash;
+
+	
+	document.getElementById("div1").innerHTML = "Computing SHA3 Hash of Local Certificate.... ";
+   /* Get image */
+   var image_src =  document.getElementById("cert_img").src;
+   var image_strt_idx = image_src.indexOf(",");
+   var img = image_src.substring(image_strt_idx+1);
+   console.log("Image: " +img);
+   
+   var base64 = getBase64Image(document.getElementById("cert_img"));
+   var hash = web3.utils.sha3(img);
+   console.log(hash);
+   setTimeout(function() 
+    {
+    document.getElementById("div1").innerHTML += "Done";
+    document.getElementById("hash").innerHTML = "Hash :"+hash;
+    setTimeout(function() 
+    {
+    document.getElementById("div2").innerHTML = "Fetching Certificate Hash from ethereum blockchain.... ";
    const myContract = new web3.eth.Contract(abi,contract_address_val);
-myContract.methods.verifyCertificate(stud_pub_key_val, hash).call({from:'0x794BE4d9eAA1b865Ad8223E6f2AE928F06b60213'}, function(error, result)
-{
+   setTimeout(function() {
+    document.getElementById("div2").innerHTML += "Done";
+        setTimeout(function() { 
+            document.getElementById("div3").innerHTML = "Comparing Local and Blockchain Hashes.... "; 
+	myContract.methods.verifyCertificate(stud_pub_key_val, hash).call({from:'0x794BE4d9eAA1b865Ad8223E6f2AE928F06b60213'}, function(error, result)
+	{
        console.log("check 1");
+	    setTimeout(function() {
+    	document.getElementById("div3").innerHTML += "Done";
+        setTimeout(function() {
         if(!error)
         {
         	console.log(result);
@@ -122,7 +149,14 @@ myContract.methods.verifyCertificate(stud_pub_key_val, hash).call({from:'0x794BE
 		else{
 			console.log(error);
 		}
+		}, 2000);
+        }, 2000);
 });
+}, 2000);
+        
+    }, 2000);
+        }, 2000);
+    }, 2000);
 }
     
 function getBase64Image(img)
@@ -135,8 +169,8 @@ function getBase64Image(img)
   var dataURL = canvas.toDataURL("image/png");
   return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
 }
-function print() 
-{
+//function print() 
+//{
     
-}
+//}
 </script>
