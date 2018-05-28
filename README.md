@@ -15,6 +15,6 @@ is a non commercial software used for our own understanding
 Refer the README.md at the server_app folder
 
 ## Demo of the implementation
-https://www.youtube.com/watch?v=itef4GiycTk
-https://www.youtube.com/watch?v=AphvtyiWUxQ
+- https://www.youtube.com/watch?v=itef4GiycTk
+- https://www.youtube.com/watch?v=AphvtyiWUxQ
 
